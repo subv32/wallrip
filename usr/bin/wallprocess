@@ -1,0 +1,24 @@
+#!/bin/bash
+userEmail="$1"
+query="$2"
+email="account@gmail.com"
+emailpassword="password"
+smtpserver="smtp.gmail.com:587"
+timestamp=$(date "+%s")
+
+mkdir $timestamp
+cd $timestamp
+
+wallhavenrip $query
+
+archive="rip-$timestamp.7z"
+7z a $archive wallhaven-*
+rm wallhaven-*
+#upload results
+DownloadUrl=$(curl --upload-file ./$archive https://transfer.sh/$archive)
+
+#send email with link
+sendEmail -t $userEmail -f $email -u "WallHaven Rip for $query" -m "Your download is ready.. $DownloadUrl" -s $smtpserver -xu $email -xp $emailpassword
+
+cd ..
+rm -rf $timestamp
