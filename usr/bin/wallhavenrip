@@ -1,0 +1,17 @@
+#!/bin/bash
+query=$1
+pageNumber=1
+pages=$(curl -s "http://alpha.wallhaven.cc/search?q=$query&page=$pageNumber" | grep -o 'title="Page [0-9]"' | tail -1 | cut -d"\"" -f2 | awk {'print $2'})
+
+if [ -z "$pages" ]; then pages=1; fi
+
+for ((x=0; x<$pages; x++))
+do
+	listOfwallPapers=$(curl -s "http://alpha.wallhaven.cc/search?q=$query&page=$pageNumber" | grep -o 'data-wallpaper-id="[0-9]\+"' | cut -d "\"" -f2)
+	for i in $listOfwallPapers
+	do
+		wallpaper=$(curl -s "http://alpha.wallhaven.cc/wallpaper/$i" | grep -o "wallhaven-[0-9]\+.[a-z][a-z][a-z]" | head -1)
+		wget -q "http://wallpapers.wallhaven.cc/wallpapers/full/$wallpaper"
+	done
+	((pageNumber++))
+done
