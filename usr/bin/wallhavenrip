@@ -1,7 +1,7 @@
 #!/bin/bash
 query=$1
 pageNumber=1
-pages=$(curl -s "http://alpha.wallhaven.cc/search?q=$query&page=$pageNumber" | grep -o 'title="Page [0-9]"' | tail -1 | cut -d"\"" -f2 | awk {'print $2'})
+pages=$(curl -s "http://alpha.wallhaven.cc/search?q=$query&page=$pageNumber" | grep -o 'title="Page [0-9]\+"' | tail -1 | cut -d"\"" -f2 | awk {'print $2'})
 
 if [ -z "$pages" ]; then pages=1; fi
 
