@@ -1,6 +1,11 @@
 #!/bin/bash
-userEmail="$1"
 query="$2"
+
+#Check the cache and exit if found
+cacheCheck=$(wallcache $query) 
+if [ ! -z "$cacheCheck" ]; then echo $cacheCheck; exit; fi
+
+userEmail="$1"
 email="account@gmail.com"
 emailpassword="password"
 smtpserver="smtp.gmail.com:587"
@@ -11,8 +16,12 @@ cd $timestamp
 
 wallhavenrip $query
 
-archive="rip-$timestamp.7z"
-7z a $archive wallhaven-*
+#archive="rip-$timestamp.7z"
+archive="rip-$timestamp.zip"
+
+#7z a $archive wallhaven-*
+7z a -tzip $archive wallhaven-*
+
 rm wallhaven-*
 #upload results
 DownloadUrl=$(curl --upload-file ./$archive https://transfer.sh/$archive)
