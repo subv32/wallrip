@@ -1,0 +1,13 @@
+#!/bin/bash
+query=$1
+cachefile="wall.cache"
+
+#If the cache is older than a week we delete it
+if [ $(($(date "+%s")-$(head -1 $cachefile))) -gt 604800 ]; then rm $cachefile fi
+
+#If the cache file doesn't exist then we create it with a timestamp of creation date 
+if [ ! -e "$cachefile" ]; then touch wall.cache; date "+%s" >> $cachefile; fi
+
+#Search the cachefile, return a download URL if a cache for the query exists, otherwise return nothing
+cached=$(grep "^$query " $cachefile | tee | awk {'print $2'})
+if [ -z "$cached" ]; then exit; else echo $cached; fi
