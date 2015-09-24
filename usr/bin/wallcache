@@ -1,6 +1,6 @@
 #!/bin/bash
 query=$1
-cachefile="/home/test/wall.cache"
+cachefile="/var/www/wall.cache"
 
 function createCache { touch $cachefile;  date "+%s" >> $cachefile; }
 
